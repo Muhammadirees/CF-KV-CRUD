@@ -11,6 +11,12 @@ export async function handleCreate(request : Request, env: Env, key:string | nul
     }
 
     const existing: AllUsers = await env.MY_KV1.get("users", { type: "json" }) || []
+    const exitUser = existing.some(user=> user.id === key)
+
+    if(exitUser){
+      console.log(`The user already exit cannot create kv with ${key}`)
+      return new Response(`The user already exited with this ${key}`,{ status: 400})
+    }
 
     existing.push({
         id: body.id,
